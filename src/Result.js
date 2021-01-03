@@ -75,7 +75,7 @@ class Result extends Component {
     return (
       <div className="App">
         <div style={{ marginTop: '50px', marginBottom: '50px' }}>
-          <h1>All Cars (ERC-721):</h1>
+          <h1>All Car Ownership Token (COT) [ERC-721]:</h1>
           <div style={{ marginLeft: '10px', marginRight: '10px' }}>
             <Row>
               <Col md={9}>
