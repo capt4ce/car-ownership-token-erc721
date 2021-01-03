@@ -48,10 +48,23 @@ const fetchTokens = async (tokenInstance, owner) => {
   const tokens = await Promise.all(resultPromise);
   const result = await Promise.all(
     tokens.map(async (token) => {
-      return tokenInstance.getCar(token);
+      return {
+        ...(await tokenInstance.getCar(token)),
+        // id: new Web3.utils.BN(token).toString(),
+        tokenId: token,
+        tokenIdStr: token.toString(),
+      };
     })
   );
-  return result;
+  const finalResult = await Promise.all(
+    result.map(async (car) => {
+      return {
+        ...car,
+        owner: await tokenInstance.ownerOf(car.tokenId),
+      };
+    })
+  );
+  return finalResult;
 };
 
 export { getProvider, getTokenInstance, mintToken, fetchTokens };

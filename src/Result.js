@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Container,
-  Button,
-  FormControl,
-  Row,
-  Col,
-  Card,
-  Form,
-} from 'react-bootstrap';
+import { Button, FormControl, Row, Col, Card, Form } from 'react-bootstrap';
 
 import { mintToken, fetchTokens } from './utils';
 class Result extends Component {
@@ -93,7 +85,7 @@ class Result extends Component {
                 </Row>
               </Col>
               <Col md={3}>
-                <Card>
+                <Card style={{ marginBottom: '30px' }}>
                   <Card.Header>Mint A New Car</Card.Header>
                   <Card.Body>
                     <Form>
@@ -135,12 +127,14 @@ class Result extends Component {
   }
 }
 
-const CarLayout = ({ code, img }) => (
+const CarLayout = ({ code, img, tokenIdStr, owner }) => (
   <Col md={3} style={{ marginBottom: '10px' }}>
     <Card>
       <Card.Img src={img} />
       <Card.Body>
         <Card.Title>{code}</Card.Title>
+        <p>Car ID: {tokenIdStr}</p>
+        <p>Owner: {owner}</p>
         <Button variant="success">Transfer Ownership</Button>
       </Card.Body>
     </Card>
