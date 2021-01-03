@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.css';
+import Result from './Result';
+import { getTokenInstance } from './utils';
+
+class App extends Component {
+  state = { loading: true, tokenInstance: undefined };
+
+  componentDidMount() {
+    getTokenInstance()
+      .then((tokenInstance) => this.setState({ loading: false, tokenInstance }))
+      .catch((err) => console.log('debug error', err));
+  }
+
+  render() {
+    if (this.state.loading) return 'Loading Application...';
+
+    return <Result tokenInstance={this.state.tokenInstance} />;
+  }
 }
 
 export default App;
