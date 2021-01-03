@@ -1,7 +1,7 @@
 # Getting Started with Car Ownership Token ERC721
 
 Sample project for creating custom token on top of ethereum using ERC721 standard.
-![demo](assets/demo.gif)
+![demo](assets/demo.png)
 
 ## How to run the project
 
