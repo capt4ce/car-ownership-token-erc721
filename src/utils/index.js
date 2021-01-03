@@ -20,13 +20,13 @@ const getTokenInstance = async () => {
   return tokenInstance;
 };
 
-const mintToken = (
+const mintToken = async (
   tokenInstance,
   tokenObjectArray = [],
   sender,
   gas = 1700000
 ) => {
-  return tokenInstance.mint(
+  await tokenInstance.mint(
     tokenObjectArray[0], // code
     tokenObjectArray[1], // img
     {
@@ -34,6 +34,7 @@ const mintToken = (
       gas,
     }
   );
+  return { code: tokenObjectArray[0], img: tokenObjectArray[1] };
 };
 
 const fetchTokens = async (tokenInstance, owner) => {

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
-import { newContextComponents } from '@drizzle/react-components';
+import {
+  Container,
+  Button,
+  FormControl,
+  Row,
+  Col,
+  Card,
+  Form,
+} from 'react-bootstrap';
+
 import { mintToken, fetchTokens } from './utils';
-
-const { ContractData, ContractForm } = newContextComponents;
-
 class Result extends Component {
   state = {
     accounts: undefined,
@@ -12,6 +18,7 @@ class Result extends Component {
     isLoadingMintToken: true,
     carCodeInput: '',
     carImageInput: '',
+    newTokens: [],
   };
 
   componentDidMount = async () => {
@@ -55,7 +62,14 @@ class Result extends Component {
     ];
 
     try {
-      await mintToken(tokenInstance, carAttributes, accounts[0]);
+      const newToken = await mintToken(
+        tokenInstance,
+        carAttributes,
+        accounts[0]
+      );
+      const newTokensCopy = this.state.newTokens;
+      newTokensCopy.push(newToken);
+      this.setState({ newTokens: newTokensCopy });
     } catch (err) {
       console.log('debug error mint', err);
     }
@@ -63,46 +77,74 @@ class Result extends Component {
 
   render() {
     if (!window.ethereum) return 'No metamask is connected';
-    const { tokenInstance } = this.props;
-    const { fetchedTokens } = this.state;
+    const { fetchedTokens, newTokens } = this.state;
+    console.log('debug fetchedTokens', fetchedTokens);
 
     return (
       <div className="App">
-        <div style={{ marginTop: '50px' }}>
-          All Tokens:{' '}
-          <div>
-            {Array.isArray(fetchedTokens) &&
-              fetchedTokens.map((token) => <p>{JSON.stringify(token)}</p>)}
+        <div style={{ marginTop: '50px', marginBottom: '50px' }}>
+          <h1>All Cars (ERC-721):</h1>
+          <div style={{ marginLeft: '10px', marginRight: '10px' }}>
+            <Row>
+              <Col md={9}>
+                <Row>
+                  {Array.isArray(fetchedTokens) && fetchedTokens.map(CarLayout)}
+                  {Array.isArray(newTokens) && newTokens.map(CarLayout)}
+                </Row>
+              </Col>
+              <Col md={3}>
+                <Card>
+                  <Card.Header>Mint A New Car</Card.Header>
+                  <Card.Body>
+                    <Form>
+                      <Form.Group>
+                        <Form.Label>Card Code</Form.Label>
+                        <FormControl
+                          onChange={(e) => {
+                            this.setState({ carCodeInput: e.target.value });
+                          }}
+                        />
+                      </Form.Group>
+
+                      <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Car Image</Form.Label>
+                        <FormControl
+                          onChange={(e) => {
+                            this.setState({ carImageInput: e.target.value });
+                          }}
+                        />
+                      </Form.Group>
+                      <Button
+                        variant="primary"
+                        type="button"
+                        onClick={this.mintToken}
+                      >
+                        Mint a new car
+                      </Button>
+                    </Form>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
           </div>
           <br />
           <br />
-          <div>
-            <div>
-              Car code:
-              <div>
-                <input
-                  onChange={(e) => {
-                    this.setState({ carCodeInput: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div>
-              Car image:
-              <div>
-                <input
-                  onChange={(e) => {
-                    this.setState({ carImageInput: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <button onClick={this.mintToken}>Mint a new token</button>
-          </div>
         </div>
       </div>
     );
   }
 }
+
+const CarLayout = ({ code, img }) => (
+  <Col md={3} style={{ marginBottom: '10px' }}>
+    <Card>
+      <Card.Img src={img} />
+      <Card.Body>
+        <Card.Title>{code}</Card.Title>
+        <Button variant="success">Transfer Ownership</Button>
+      </Card.Body>
+    </Card>
+  </Col>
+);
 
 export default Result;
